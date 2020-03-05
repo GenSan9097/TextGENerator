@@ -229,7 +229,7 @@ public class FontDialog extends JDialog implements ActionListener {
 				}
 			}
 		} else if (obj == button_ok) {
-			
+			textarea.setFont(label_sample[0].getFont() );
 		} else {
 			
 		}
