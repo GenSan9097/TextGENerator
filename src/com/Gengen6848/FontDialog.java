@@ -123,6 +123,7 @@ public class FontDialog extends JDialog implements ActionListener {
 				new String[] {"8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28",
 						"36", "48", "72"} );
 		combo_fontSize.setFont(dialogFont);
+		combo_fontSize.addActionListener(this);
 		
 		label_sample = new JLabel[7];
 		label_sample[0] = new JLabel("A");
@@ -132,9 +133,11 @@ public class FontDialog extends JDialog implements ActionListener {
 		label_sample[4] = new JLabel("安");
 		label_sample[5] = new JLabel("0");
 		label_sample[6] = new JLabel("1");
-		for(int i =0; i < label_sample.length; i++) {
-			panel_sample.add(label_sample[i]);
+		for(JLabel sample : label_sample) {
+			sample.setFont(textarea.getFont() );
+			panel_sample.add(sample);
 		}
+		
 		
 		panel_fontType.add(label_fontType);
 		panel_fontType.add(combo_fontType);
@@ -208,9 +211,23 @@ public class FontDialog extends JDialog implements ActionListener {
 				}
 			}
 		} else if (obj == combo_fontStyle) {
-			
+			int select = combo_fontStyle.getSelectedIndex();
+			Font selectedFont = new Font(String_availableFont[combo_fontType.getSelectedIndex()], select, 14);
+			if (select != -1) {
+				for (JLabel sample : label_sample) {
+					sample.setFont(selectedFont);
+				}
+			}
 		} else if (obj == combo_fontSize) {
-			
+			int select = combo_fontSize.getSelectedIndex();
+			System.out.println(select);
+			select = fixFontSizeValue(select);
+			Font selectedFont = new Font(String_availableFont[combo_fontType.getSelectedIndex()], combo_fontStyle.getSelectedIndex(), select);
+			if (select != -1) {
+				for (JLabel sample : label_sample) {
+					sample.setFont(selectedFont);
+				}
+			}
 		} else if (obj == button_ok) {
 			
 		} else {
@@ -218,7 +235,25 @@ public class FontDialog extends JDialog implements ActionListener {
 		}
 	}
 	
-	public void getTextarea(JTextArea textarea) {
+	public int fixFontSizeValue (int unfixedValue) {
+		int fixedValue;
+		
+		if (unfixedValue < 4) {
+			fixedValue = unfixedValue + 8;
+			System.out.println(fixedValue + "\na");
+		} else if (unfixedValue < 13) {
+			fixedValue = (unfixedValue + 2) * 2;
+			System.out.println(fixedValue + "\nb");
+		} else {
+			int x = unfixedValue - 13;
+			fixedValue = 36 + 12 * x;
+			System.out.println(fixedValue + "\nc");
+		}
+		
+		return fixedValue;
+	}
+	
+	public void setTextarea(JTextArea textarea) {
 		this.textarea = textarea;
 	}
 	
